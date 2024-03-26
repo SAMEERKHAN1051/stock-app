@@ -1,0 +1,12 @@
+.inputField{
+    background-color: transparent;
+    border: 1px solid;
+}
+.mat-form-field-outline .mat-form-field-outline-start {
+    border-radius: 100px 0 0 100px;
+    min-width: 100px;
+  }
+  
+ .mat-form-field-outline .mat-form-field-outline-end {
+    border-radius: 0 100px 100px 0;
+  }

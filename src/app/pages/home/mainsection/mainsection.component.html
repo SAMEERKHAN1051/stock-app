@@ -1,0 +1,59 @@
+<div class="imageAndTextArea">
+  <div class="contentArea">
+    <div class="item1">
+      <h1>TSLA &Star;</h1>
+      <h3>Tesla Inc</h3>
+      <p>NASDAQ NMS - GLOBAL MARKET</p>
+      <div class="btnsection"><button>Buy</button><button>Sell</button></div>
+    </div>
+    <div class="item2">
+      <img
+        style="height: 200px; width: 200px"
+        src="https://images.unsplash.com/photo-1682686580452-37f1892ee5e8?q=80&w=1975&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        alt=""
+      />
+    </div>
+    <div class="item3" style="color: red">
+      <h1>199.95</h1>
+      <h4>-0.50(-0.25%)</h4>
+      <p>{{ currentDate }}</p>
+    </div>
+  </div>
+  <div class="marketArea">
+    <h5 style="color: red">Market Closed on {{ currentDate }}</h5>
+  </div>
+</div>
+<mat-tab-group>
+  <mat-tab label="Summary">
+    <ng-template matTabContent> Content 1 - Loaded: </ng-template>
+  </mat-tab>
+  <mat-tab label="Top News">
+    <ng-template matTabContent>
+      <div class="news">
+        <mat-card class="example-card">
+          <mat-card-header>
+            <mat-card-title-group>
+              <!-- <mat-card-title>Shiba Inu</mat-card-title> -->
+              <img
+                mat-card-sm-image
+                src="https://material.angular.io/assets/img/examples/shiba2.jpg"
+              />
+              <mat-card-content
+                >Lorem, ipsum dolor sit amet consectetur adipisicing elit.
+                Facere aspernatur unde, modi autem corporis fuga non quibusdam
+                eius, ad sequi ut est tempore obcaecati sit fugiat repellat
+                optio ipsa delectus!</mat-card-content
+              >
+            </mat-card-title-group>
+          </mat-card-header>
+        </mat-card>
+      </div>
+    </ng-template>
+  </mat-tab>
+  <mat-tab label="Charts">
+    <ng-template matTabContent> Content 3 - Loaded: </ng-template>
+  </mat-tab>
+  <mat-tab label="Insights">
+    <ng-template matTabContent> Content 3 - Loaded: </ng-template>
+  </mat-tab>
+</mat-tab-group>

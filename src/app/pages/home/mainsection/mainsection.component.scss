@@ -1,0 +1,16 @@
+.example-card {
+  border: 1px solid;
+}
+.imageAndTextArea {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+.contentArea{
+    display: flex;
+    justify-content: space-around;
+    gap: 6rem;
+}
+.item1{
+    
+}
