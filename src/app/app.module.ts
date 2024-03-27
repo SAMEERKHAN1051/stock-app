@@ -19,6 +19,12 @@ import { MainsectionComponent } from './pages/home/mainsection/mainsection.compo
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatSortModule } from '@angular/material/sort';
+import { MatTableModule } from '@angular/material/table';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { PortfolioComponent } from './pages/portfolio/portfolio.component';
+// import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -31,6 +37,8 @@ import { MatCardModule } from '@angular/material/card';
     HomeComponent,
     SearchComponent,
     MainsectionComponent,
+    PortfolioComponent,
+    // HttpClientModule,
   ],
   imports: [
     BrowserModule,
@@ -44,6 +52,10 @@ import { MatCardModule } from '@angular/material/card';
     MatTabsModule,
     MatCardModule,
     MatButtonModule,
+    MatGridListModule,
+    MatSortModule,
+    MatTableModule,
+    MatExpansionModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

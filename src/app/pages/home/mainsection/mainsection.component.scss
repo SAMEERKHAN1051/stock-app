@@ -8,9 +8,13 @@
 }
 .contentArea{
     display: flex;
-    justify-content: space-around;
+    // justify-content: space-around;
     gap: 6rem;
 }
 .item1{
     
+}
+.insight{
+  display: flex;
+  justify-content: center;
 }
