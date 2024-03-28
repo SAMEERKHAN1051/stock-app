@@ -14,25 +14,28 @@
       </mat-autocomplete>
     </mat-form-field>
   </form> -->
-<div class="container justify-content-center d-flex text-center mt-5 mb-5 "> 
-    <form class="example-form">
-      <h1>Stock Search</h1>
-      <mat-form-field class="">
-        <input
-          type="text"
-          class="inputField"
-          placeholder="Pick one"
-          matInput
-          [matAutocomplete]="auto"
-        />
-        <mat-autocomplete #auto="matAutocomplete">
-          <mat-option *ngFor="let option of options" [value]="option">{{
-            option
-          }}</mat-option>
-        </mat-autocomplete>
-      </mat-form-field>
-    </form>
-  </div>
+<!-- <div class="container justify-content-center d-flex text-center mt-5 mb-5">
+  <form class="example-form">
+    <h1>Stock Search</h1>
+    <mat-form-field class="">
+      <input
+        type="text"
+        class="inputField"
+        placeholder="Pick one"
+        matInput
+        [(ngModel)]="searchText"
+        (keyup)="getSearch()"
+        [matAutocomplete]="auto"
+        name="standalone"
+      />
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onSelectStock()">
+        <mat-option *ngFor="let seacrh of searchList" [value]="seacrh.symbol">{{
+          seacrh.description
+        }}</mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </form>
+</div> -->
 <!-- <form class="example-form">
   <mat-form-field class="example-full-width">
     <input

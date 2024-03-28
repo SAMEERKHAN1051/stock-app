@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+
+import { HttpClientModule } from '@angular/common/http';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -24,10 +26,14 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { PortfolioComponent } from './pages/portfolio/portfolio.component';
+import { FormsModule } from '@angular/forms';
+
+
 // import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
+    // ConfirmDialogModule,
     AppComponent,
     ComponentComponent,
     NavbarComponent,
@@ -41,6 +47,7 @@ import { PortfolioComponent } from './pages/portfolio/portfolio.component';
     // HttpClientModule,
   ],
   imports: [
+    FormsModule,
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
@@ -56,6 +63,7 @@ import { PortfolioComponent } from './pages/portfolio/portfolio.component';
     MatSortModule,
     MatTableModule,
     MatExpansionModule,
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

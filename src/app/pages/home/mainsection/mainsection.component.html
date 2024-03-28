@@ -1,210 +1,297 @@
-<div class="container text-center">
-  <div class="row justify-content-center mb-5">
-    <div class="col">
-      <h1>TSLA &Star;</h1>
-      <h3>Tesla Inc</h3>
-      <p>NASDAQ NMS - GLOBAL MARKET</p>
-      <div class="btnsection">
-        <button class="btn btn-success">Buy</button
-        ><button class="btn btn-danger mx-2">Sell</button>
+<div class="container justify-content-center d-flex text-center mt-5 mb-5">
+  <form class="example-form">
+    <h1>Stock Search</h1>
+    <mat-form-field class="">
+      <input
+        type="text"
+        class="inputField"
+        placeholder="Pick one"
+        matInput
+        [(ngModel)]="searchText"
+        (keyup)="getstockDetail()"
+        [matAutocomplete]="auto"
+        name="standalone"
+      />
+      <mat-autocomplete
+        #auto="matAutocomplete"
+        (optionSelected)="onSelectStock()"
+      >
+        <mat-option *ngFor="let seacrh of searchList" [value]="seacrh.symbol">{{
+          seacrh.description
+        }}</mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </form>
+</div>
+
+<ng-container *ngIf="stockDetail && quoteDetail">
+  <div class="container text-center">
+    <div class="row justify-content-center mb-5">
+      <div class="col">
+        <h1>{{ stockDetail.ticker }} &Star;</h1>
+        <h3>{{ stockDetail.name }}</h3>
+        <p>{{ stockDetail.exchange }}</p>
+        <div class="btnsection">
+          <button
+            class="btn btn-success"
+            data-bs-toggle="modal"
+            data-bs-target="#exampleModal"
+            (click)="model()"
+          >
+            Buy</button
+          ><button
+            class="btn btn-danger mx-2"
+            data-bs-toggle="modal"
+            data-bs-target="#exampleModal"
+            (click)="model()"
+          >
+            Sell
+          </button>
+        </div>
+      </div>
+      <div class="col">
+        <img style="max-width: 200px" src="{{ stockDetail.logo }}" alt="" />
+      </div>
+      <div class="col" style="color: red">
+        <h1>{{ stockDetail.shareOutstanding }}</h1>
+        <h4>{{ quoteDetail.d }}({{ quoteDetail.dp }})%</h4>
+        <p>currentDate()</p>
       </div>
     </div>
-    <div class="col">
-      <img
-        style="max-width: 200px"
-        src="https://images.unsplash.com/photo-1682686580452-37f1892ee5e8?q=80&w=1975&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-        alt=""
-      />
-    </div>
-    <div class="col" style="color: red">
-      <h1>199.95</h1>
-      <h4>-0.50(-0.25%)</h4>
-      <p>{{ currentDate() }}</p>
+    <div class="marketArea mb-5">
+      <h5 style="color: red">Market Closed on currentDate()</h5>
     </div>
   </div>
-  <div class="marketArea mb-5">
-    <h5 style="color: red">Market Closed on {{ currentDate() }}</h5>
+  <mat-tab-group>
+    <mat-tab label="Summary">
+      <ng-template matTabContent>
+        <div
+          class="row row-cols-1 row-cols-sm-2 row-cols-md-3 mt-5 justify-content-center text-center"
+        >
+          <div class="col-auto">
+            <p>
+              High Price: <span>{{ quoteDetail.h }}</span>
+            </p>
+            <p>
+              Low Price: <span>{{ quoteDetail.l }}</span>
+            </p>
+            <p>
+              Prev Price: <span>{{ quoteDetail.pc }}</span>
+            </p>
+            <p>
+              Open Price: <span>{{ quoteDetail.o }}</span>
+            </p>
+          </div>
+          <div class="col-auto">
+            <div class="summaryContent">
+              <h3>About the company</h3>
+              <p>
+                IPO Start Date: <span>{{ stockDetail.ipo }}</span>
+              </p>
+              <p>
+                Industry: <span>{{ stockDetail.finnhubIndustry }}</span>
+              </p>
+              <p>
+                Webpage:
+                <span
+                  ><a href="{{ stockDetail.weburl }}">{{
+                    stockDetail.name
+                  }}</a></span
+                >
+              </p>
+              <p>
+                Company peers:
+                <span
+                  >Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                  Illo perspiciatis, impedit commodi omnis voluptatum, possimus
+                  minima similique ipsam a debitis esse quaerat accusantium quo?
+                  Officia corrupti hic fuga! Sapiente, recusandae.</span
+                >
+              </p>
+            </div>
+          </div>
+          <div class="col-auto">
+            <img
+              style="height: 400px; width: 400px"
+              class="img-fluid"
+              src="https://images.unsplash.com/photo-1682686580452-37f1892ee5e8?q=80&w=1975&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+              alt=""
+            />
+          </div>
+        </div>
+      </ng-template>
+    </mat-tab>
+    <mat-tab label="Top News">
+      <ng-template matTabContent>
+        <div class="news">
+          <div class="container mt-5">
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2">
+              <div class="col mb-2">
+                <mat-card class="example-card">
+                  <mat-card-header>
+                    <mat-card-title-group>
+                      <!-- <mat-card-title>Shiba Inu</mat-card-title> -->
+                      <img
+                        mat-card-sm-image
+                        src="https://material.angular.io/assets/img/examples/shiba2.jpg"
+                      />
+                      <mat-card-content
+                        >Lorem, ipsum dolor sit amet consectetur adipisicing
+                        elit. Facere aspernatur unde, modi autem corporis fuga
+                        non quibusdam eius, ad sequi ut est tempore obcaecati
+                        sit fugiat repellat optio ipsa
+                        delectus!</mat-card-content
+                      >
+                    </mat-card-title-group>
+                  </mat-card-header>
+                </mat-card>
+              </div>
+              <div class="col mb-2">
+                <mat-card class="example-card">
+                  <mat-card-header>
+                    <mat-card-title-group>
+                      <!-- <mat-card-title>Shiba Inu</mat-card-title> -->
+                      <img
+                        mat-card-sm-image
+                        src="https://material.angular.io/assets/img/examples/shiba2.jpg"
+                      />
+                      <mat-card-content
+                        >Lorem, ipsum dolor sit amet consectetur adipisicing
+                        elit. Facere aspernatur unde, modi autem corporis fuga
+                        non quibusdam eius, ad sequi ut est tempore obcaecati
+                        sit fugiat repellat optio ipsa
+                        delectus!</mat-card-content
+                      >
+                    </mat-card-title-group>
+                  </mat-card-header>
+                </mat-card>
+              </div>
+              <div class="col mb-2">
+                <mat-card class="example-card">
+                  <mat-card-header>
+                    <mat-card-title-group>
+                      <!-- <mat-card-title>Shiba Inu</mat-card-title> -->
+                      <img
+                        mat-card-sm-image
+                        src="https://material.angular.io/assets/img/examples/shiba2.jpg"
+                      />
+                      <mat-card-content
+                        >Lorem, ipsum dolor sit amet consectetur adipisicing
+                        elit. Facere aspernatur unde, modi autem corporis fuga
+                        non quibusdam eius, ad sequi ut est tempore obcaecati
+                        sit fugiat repellat optio ipsa
+                        delectus!</mat-card-content
+                      >
+                    </mat-card-title-group>
+                  </mat-card-header>
+                </mat-card>
+              </div>
+              <div class="col mb-2">
+                <mat-card class="example-card">
+                  <mat-card-header>
+                    <mat-card-title-group>
+                      <!-- <mat-card-title>Shiba Inu</mat-card-title> -->
+                      <img
+                        mat-card-sm-image
+                        src="https://material.angular.io/assets/img/examples/shiba2.jpg"
+                      />
+                      <mat-card-content
+                        >Lorem, ipsum dolor sit amet consectetur adipisicing
+                        elit. Facere aspernatur unde, modi autem corporis fuga
+                        non quibusdam eius, ad sequi ut est tempore obcaecati
+                        sit fugiat repellat optio ipsa
+                        delectus!</mat-card-content
+                      >
+                    </mat-card-title-group>
+                  </mat-card-header>
+                </mat-card>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </mat-tab>
+    <mat-tab label="Charts">
+      <ng-template matTabContent> Content 3 - Loaded: </ng-template>
+    </mat-tab>
+    <mat-tab label="Insights">
+      <ng-template matTabContent>
+        <div class="insight">
+          <table class="table table-striped" style="border-bottom: 1px solid">
+            <thead>
+              <tr>
+                <th scope="col">Country</th>
+                <th scope="col">Area</th>
+                <th scope="col">Population</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{{ stockDetail.country }}</td>
+                <td>lorem</td>
+                <td>lorem</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 demo-table">
+         
+          <ng-container matColumnDef="position">
+            <th mat-header-cell *matHeaderCellDef>No.</th>
+            <td mat-cell *matCellDef="let element">{{element.position}}</td>
+          </ng-container>
+        
+          
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>Name</th>
+            <td mat-cell *matCellDef="let element">{{element.name}}</td>
+          </ng-container>
+        
+          
+          <ng-container matColumnDef="weight">
+            <th mat-header-cell *matHeaderCellDef>Weight</th>
+            <td mat-cell *matCellDef="let element">{{element.weight}}</td>
+          </ng-container>
+        
+         
+          <ng-container matColumnDef="symbol">
+            <th mat-header-cell *matHeaderCellDef>Symbol</th>
+            <td mat-cell *matCellDef="let element">{{element.symbol}}</td>
+          </ng-container>
+        
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table> -->
+      </ng-template>
+    </mat-tab>
+  </mat-tab-group>
+</ng-container>
+
+<div
+  class="modal fade"
+  id="exampleModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">...</div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
   </div>
 </div>
-<mat-tab-group>
-  <mat-tab label="Summary">
-    <ng-template matTabContent>
-      <div
-        class="row row-cols-1 row-cols-sm-2 row-cols-md-3 mt-5 justify-content-center text-center"
-      >
-        <div class="col-auto">
-          <p>High Price: <span>182.89</span></p>
-          <p>Low Price: <span>181.06</span></p>
-          <p>Prev Price: <span>181.56</span></p>
-          <p>Open Price: <span>181.61</span></p>
-        </div>
-        <div class="col-auto">
-          <div class="summaryContent">
-            <h3>About the company</h3>
-            <p>IPO Start Date: <span>1980-12-12</span></p>
-            <p>Industry: <span>Technolgy</span></p>
-            <p>
-              Webpage: <span><a href="#">Loremkfjdasfk</a></span>
-            </p>
-            <p>
-              Company peers:
-              <span
-                >Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illo
-                perspiciatis, impedit commodi omnis voluptatum, possimus minima
-                similique ipsam a debitis esse quaerat accusantium quo? Officia
-                corrupti hic fuga! Sapiente, recusandae.</span
-              >
-            </p>
-          </div>
-        </div>
-        <div class="col-auto">
-          <img
-            style="height: 400px; width: 400px"
-            class="img-fluid"
-            src="https://images.unsplash.com/photo-1682686580452-37f1892ee5e8?q=80&w=1975&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-            alt=""
-          />
-        </div>
-      </div>
-    </ng-template>
-  </mat-tab>
-  <mat-tab label="Top News">
-    <ng-template matTabContent>
-      <div class="news">
-        <div class="container mt-5">
-          <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2">
-            <div class="col mb-2">
-              <mat-card class="example-card">
-                <mat-card-header>
-                  <mat-card-title-group>
-                    <!-- <mat-card-title>Shiba Inu</mat-card-title> -->
-                    <img
-                      mat-card-sm-image
-                      src="https://material.angular.io/assets/img/examples/shiba2.jpg"
-                    />
-                    <mat-card-content
-                      >Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                      Facere aspernatur unde, modi autem corporis fuga non
-                      quibusdam eius, ad sequi ut est tempore obcaecati sit
-                      fugiat repellat optio ipsa delectus!</mat-card-content
-                    >
-                  </mat-card-title-group>
-                </mat-card-header>
-              </mat-card>
-            </div>
-            <div class="col mb-2">
-              <mat-card class="example-card">
-                <mat-card-header>
-                  <mat-card-title-group>
-                    <!-- <mat-card-title>Shiba Inu</mat-card-title> -->
-                    <img
-                      mat-card-sm-image
-                      src="https://material.angular.io/assets/img/examples/shiba2.jpg"
-                    />
-                    <mat-card-content
-                      >Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                      Facere aspernatur unde, modi autem corporis fuga non
-                      quibusdam eius, ad sequi ut est tempore obcaecati sit
-                      fugiat repellat optio ipsa delectus!</mat-card-content
-                    >
-                  </mat-card-title-group>
-                </mat-card-header>
-              </mat-card>
-            </div>
-            <div class="col mb-2">
-              <mat-card class="example-card">
-                <mat-card-header>
-                  <mat-card-title-group>
-                    <!-- <mat-card-title>Shiba Inu</mat-card-title> -->
-                    <img
-                      mat-card-sm-image
-                      src="https://material.angular.io/assets/img/examples/shiba2.jpg"
-                    />
-                    <mat-card-content
-                      >Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                      Facere aspernatur unde, modi autem corporis fuga non
-                      quibusdam eius, ad sequi ut est tempore obcaecati sit
-                      fugiat repellat optio ipsa delectus!</mat-card-content
-                    >
-                  </mat-card-title-group>
-                </mat-card-header>
-              </mat-card>
-            </div>
-            <div class="col mb-2">
-              <mat-card class="example-card">
-                <mat-card-header>
-                  <mat-card-title-group>
-                    <!-- <mat-card-title>Shiba Inu</mat-card-title> -->
-                    <img
-                      mat-card-sm-image
-                      src="https://material.angular.io/assets/img/examples/shiba2.jpg"
-                    />
-                    <mat-card-content
-                      >Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                      Facere aspernatur unde, modi autem corporis fuga non
-                      quibusdam eius, ad sequi ut est tempore obcaecati sit
-                      fugiat repellat optio ipsa delectus!</mat-card-content
-                    >
-                  </mat-card-title-group>
-                </mat-card-header>
-              </mat-card>
-            </div>
-          </div>
-        </div>
-      </div>
-    </ng-template>
-  </mat-tab>
-  <mat-tab label="Charts">
-    <ng-template matTabContent> Content 3 - Loaded: </ng-template>
-  </mat-tab>
-  <mat-tab label="Insights">
-    <ng-template matTabContent>
-      <div class="insight">
-        <table class="table table-striped" style="border-bottom: 1px solid">
-          <thead>
-            <tr>
-              <th scope="col">Country</th>
-              <th scope="col">Area</th>
-              <th scope="col">Population</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>lorem</td>
-              <td>lorem</td>
-              <td>lorem</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <!-- <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 demo-table">
-       
-        <ng-container matColumnDef="position">
-          <th mat-header-cell *matHeaderCellDef>No.</th>
-          <td mat-cell *matCellDef="let element">{{element.position}}</td>
-        </ng-container>
-      
-        
-        <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef>Name</th>
-          <td mat-cell *matCellDef="let element">{{element.name}}</td>
-        </ng-container>
-      
-        
-        <ng-container matColumnDef="weight">
-          <th mat-header-cell *matHeaderCellDef>Weight</th>
-          <td mat-cell *matCellDef="let element">{{element.weight}}</td>
-        </ng-container>
-      
-       
-        <ng-container matColumnDef="symbol">
-          <th mat-header-cell *matHeaderCellDef>Symbol</th>
-          <td mat-cell *matCellDef="let element">{{element.symbol}}</td>
-        </ng-container>
-      
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-      </table> -->
-    </ng-template>
-  </mat-tab>
-</mat-tab-group>
