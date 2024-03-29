@@ -27,7 +27,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { PortfolioComponent } from './pages/portfolio/portfolio.component';
 import { FormsModule } from '@angular/forms';
-
+import { HighchartsChartModule } from 'highcharts-angular';
 
 // import { HttpClientModule } from '@angular/common/http';
 
@@ -47,6 +47,7 @@ import { FormsModule } from '@angular/forms';
     // HttpClientModule,
   ],
   imports: [
+    HighchartsChartModule,
     FormsModule,
     BrowserModule,
     AppRoutingModule,

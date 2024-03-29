@@ -8,6 +8,7 @@ import { apiToken, environments } from 'src/environments/environment';
 })
 export class CustomHttpService {
   baseUrl = environments.baseUrl;
+  polyBaseUrl = environments.polyBaseUrl
 
   constructor(private http: HttpClient) {}
 
@@ -23,6 +24,13 @@ export class CustomHttpService {
     let token = apiToken.token;
     return this.http
       .get<T>(`${this.baseUrl}${url}&token=${token}`)
+      .pipe(catchError((error: HttpErrorResponse) => this.handleErrors(error)));
+  }
+
+  getchart<T>(url: string) {
+    let token = apiToken.polyToken;
+    return this.http
+      .get<T>(`${this.polyBaseUrl}${url}&apiKey=${token}`)
       .pipe(catchError((error: HttpErrorResponse) => this.handleErrors(error)));
   }
 }
