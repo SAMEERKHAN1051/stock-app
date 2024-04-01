@@ -4,6 +4,10 @@ import { SearchService } from 'src/app/service/search.service';
 import { StockService } from 'src/app/service/stock.service';
 import * as Highcharts from 'highcharts/highstock';
 import { ChartService } from 'src/app/service/chart.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UserService } from 'src/app/service/user.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { BarChartData, chartApiModel } from 'src/app/models/barChart_model';
 
 // export type ChartOptions = {
 //   series: ApexAxisChartSeries;
@@ -24,14 +28,21 @@ export class MainsectionComponent implements OnInit {
   Highcharts: typeof Highcharts = Highcharts;
   searchText: string = '';
   stockDetail: any;
-  searchList: any[] = [];
   quoteDetail: any;
   closeResult: string = '';
   newsDetail: any;
+  newInfo: any;
   charDetail: any;
   stockSurpirseDetail: any;
+  stockRecomandationDetail: any;
+  quantitystockform!: FormGroup;
+  wallet: any;
+  isToBuy: boolean = false;
+  modalRef: any;
+  stockQuantity = 1;
 
   // Arrays to store data
+  searchList: any[] = [];
   dates: Date[] = [];
   closingPrices: number[] = [];
   volumes: any[] = [];
@@ -39,21 +50,70 @@ export class MainsectionComponent implements OnInit {
   areaData: any[] = [];
   barData: any[] = [];
   lineData: any[] = [];
+  barChartSeriesNames: any[] = [
+    'buy',
+    'hold',
+    'sell',
+    'strongBuy',
+    'strongSell',
+    'symbol',
+  ];
+  barChartData: BarChartData[] = [];
+
+  apiData: chartApiModel[] = [];
+
+  barChartItemList: any[] = [];
 
   constructor(
     private searchService: SearchService,
     private stockService: StockService,
     private quateService: QuoteService,
     private chartService: ChartService,
-    private elementRef: ElementRef
+    private buyFormBuilder: FormBuilder,
+    private elementRef: ElementRef,
+    private userService: UserService,
+    private modalService: NgbModal
   ) {}
 
   ngOnInit() {
     this.getstockDetail();
-    this.getChartDetail();
     // this.renderChart();
   }
 
+  getWallet() {
+    this.userService.getWallet().subscribe((resp) => {
+      console.log(resp);
+      this.wallet = resp[0];
+    });
+  }
+
+  openModal(isToBuy: boolean, content: any) {
+    this.isToBuy = isToBuy;
+    this.modalRef = this.modalService.open(content, {
+      ariaLabelledBy: 'modal-basic-title',
+    });
+  }
+
+  buySellStock() {
+    const body = {
+      userId: '2222',
+      type: this.isToBuy ? 'Buy' : 'Sell',
+      quantity: this.stockQuantity,
+      cruentValue: this.quoteDetail.c,
+      name: this.stockDetail.name,
+      ticker: this.stockDetail.ticker,
+    };
+    this.userService.buySellStock(body).subscribe((res: any) => {
+      console.log(res);
+      this.closeModal();
+    });
+  }
+
+  closeModal() {
+    if (this.modalRef) {
+      this.modalRef.close();
+    }
+  }
   generateSeries() {
     // Parse JSON data and populate arrays
     this.charDetail.results.forEach((result: any) => {
@@ -242,99 +302,109 @@ export class MainsectionComponent implements OnInit {
   }
   generateBar() {
     // Parse JSON data and populate arrays
-    this.charDetail.results.forEach((result: any) => {
-      // Convert timestamp to date object
-      // const date = new Date(result.t);
-      // Push date to dates array
-      // this.dates.push(date);
-      // Push closing price to closingPrices array
-      // this.closingPrices.push(result.c);
+    // this.stockRecomandationDetail.forEach((result: any) => {
+    //   // Convert timestamp to date object
+    //   // const date = new Date(result.t);
+    //   // Push date to dates array
+    //   // this.dates.push(date);
+    //   // Push closing price to closingPrices array
+    //   // this.closingPrices.push(result.c);
 
-      
-      this.barData.push([
-        result.t, // the date
-        result.o, // open
-        result.h, // high
-        result.l, // low
-        result.c,
-      ]);
-      // Push volume to volumes array
-      this.volumes.push([result.t, result.v]);
-    });
+    //   this.barData.push([
+    //     result.buy, // the buy
+    //     result.hold, // hol
+    //     result.sell, // sell
+    //     result.strongBuy, // strongBuy
+    //     result.strongSell, // strongSell
+    //   ]);
+    //   // Push volume to volumes array
+    //   // this.volumes.push([result.t, result.v]);
+    // });
+    // console.log(this.stockRecomandationDetail);
+    // this.stockRecomandationDetail.forEach((result: any) => {
+    //   // Convert timestamp to date object
+    //   // const date = new Date(result.t);
+    //   // Push date to dates array
+    //   // this.dates.push(date);
+    //   // Push closing price to closingPrices array
+    //   // this.closingPrices.push(result.c);
 
-    let groupingUnits = [
-      [
-        'week', // unit name
-        [1], // allowed multiples
-      ],
-      ['month', [1, 2, 3, 4, 6]],
-    ];
+    //   this.barData.push([
+    //     result.buy, // the date
+    //     result.sell, // open
+    //     result.period, // high
+    //     result.hold, // low
+    //     result.strongBuy, // close
+    //     result.strongSell, // close
+    //     result.symbol,
+    //   ]);
+    //   // Push volume to volumes array
+    //   this.volumes.push([result.period, result.v]);
+    // });
+
+    // let groupingUnits = [
+    //   [
+    //     'week', // unit name
+    //     [1], // allowed multiples
+    //   ],
+    //   ['month', [1, 2, 3, 4, 6]],
+    // ];
 
     this.barOptions = {
-      rangeSelector: {
-        selected: 4,
+      chart: {
+        type: 'column',
       },
 
       title: {
-        text: `${this.searchText} Historica`,
+        text: 'Olympic Games all-time medal table, grouped by continent',
+        align: 'left',
       },
 
-      yAxis: [
-        {
-          labels: {
-            align: 'right',
-            x: -3,
-          },
-          title: {
-            text: 'OHLC',
-          },
-          height: '60%',
-          lineWidth: 2,
-          resize: {
-            enabled: true,
-          },
+      xAxis: {
+        categories: ['Sell', 'Buy', 'hold', 'strongSell', 'strongBuy'],
+      },
+
+      yAxis: {
+        allowDecimals: false,
+        min: 0,
+        title: {
+          text: 'Count medals',
         },
-        {
-          labels: {
-            align: 'right',
-            x: -3,
-          },
-          title: {
-            text: 'Volume',
-          },
-          top: '65%',
-          height: '35%',
-          offset: 0,
-          lineWidth: 2,
-        },
-      ],
+      },
 
       tooltip: {
-        split: true,
+        format:
+          '<b>{key}</b><br/>{series.name}: {y}<br/>' +
+          'Total: {point.stackTotal}',
       },
 
-      series: [
-        {
-          name: 'AAPL Stock Price',
-          data: this.barData,
-          type: 'column',
-          threshold: null,
-          tooltip: {
-            valueDecimals: 2,
-          },
-          fillColor: {
-            linearGradient: {
-              x1: 0,
-              y1: 0,
-              x2: 0,
-              y2: 1,
-            },
-          },
+      plotOptions: {
+        column: {
+          stacking: 'normal',
         },
-      ],
+      },
+
+      series: this.barChartData,
+
+      // [{
+      //     name: 'Norway',
+      //     data: [148, 133, 124],
+      //     stack: 'Europe'
+      // }, {
+      //     name: 'Germany',
+      //     data: [102, 98, 65],
+      //     stack: 'Europe'
+      // }, {
+      //     name: 'United States',
+      //     data: [113, 122, 95],
+      //     stack: 'North America'
+      // }, {
+      //     name: 'Canada',
+      //     data: [77, 72, 80],
+      //     stack: 'North America'
+      // }]
     };
   }
-
   generateLine() {
     // Parse JSON data and populate arrays
     this.charDetail.results.forEach((result: any) => {
@@ -428,7 +498,6 @@ export class MainsectionComponent implements OnInit {
       ],
     };
   }
-
   getStockSurprice() {
     return this.stockService
       .getStockSurprise(this.searchText)
@@ -437,7 +506,46 @@ export class MainsectionComponent implements OnInit {
         console.log(this.stockSurpirseDetail);
       });
   }
+  getStockRecomandation() {
+    let buy: number[] = [];
+    let hold: number[] = [];
+    let sell: number[] = [];
+    let strongBuy: number[] = [];
+    let strongSell: number[] = [];
+    return this.stockService
+      .getStockRecomondation(this.searchText)
+      .subscribe((data: any) => {
+        this.apiData = data;
+        console.log('barchart data' + data);
 
+        for (let item of this.apiData) {
+          buy.push(item.buy);
+          hold.push(item.hold);
+          sell.push(item.sell);
+          strongBuy.push(item.strongBuy);
+          strongSell.push(item.strongSell);
+        }
+
+        this.barChartItemList = [buy, hold, sell, strongBuy, strongSell];
+
+        for (let i = 0; i < this.barChartItemList.length; i++) {
+          var barChartObj = new BarChartData(
+            this.barChartSeriesNames[i],
+            this.barChartItemList[i],
+            'xyz'
+          );
+          this.barChartData.push(barChartObj);
+        }
+
+        // this.barChartData = data;
+
+        // console.log("barchart data"+ this.barChartData![0].buy)
+
+        // var dat = new BarChartData('dsd', [2, 23], 'sdasd');
+        // this.barChartData!.push(dat);
+        // console.log(this.stockRecomandationDetail);
+      });
+  }
   getstockDetail(): any {
     return this.searchService
       .getSearch(this.searchText)
@@ -446,15 +554,14 @@ export class MainsectionComponent implements OnInit {
         console.log(this.searchList);
       });
   }
-
   onSelectStock() {
     this.stockDetail = [];
     this.getStockDetail();
     this.getQuote();
     this.getNewsDetail();
+    this.getStockRecomandation();
     this.getChartDetail();
   }
-
   getChartDetail(): any {
     return this.chartService
       .getChart(this.searchText)
@@ -463,18 +570,16 @@ export class MainsectionComponent implements OnInit {
         this.generateSeries();
         this.generateArea();
         this.generateBar();
-        this.generateLine();
+        // this.generateLine();
         this.getStockSurprice();
       });
   }
-
   getNewsDetail(): any {
     return this.quateService.getNews(this.searchText).subscribe((data: any) => {
       this.newsDetail = data;
       console.log(this.newsDetail);
     });
   }
-
   getStockDetail(): any {
     return this.stockService
       .getStock(this.searchText)
@@ -483,17 +588,30 @@ export class MainsectionComponent implements OnInit {
         console.log(this.stockDetail);
       });
   }
-
   getQuote(): any {
     return this.quateService
       .getQuote(this.searchText)
       .subscribe((data: any) => {
         this.quoteDetail = data;
-        console.log(this.quoteDetail);
+        // console.log(this.quoteDetail);
       });
   }
-  model() {
-    document.getElementById('modal');
+  buyButtons() {
+    this.wallet -= 10;
+    console.log(this.wallet);
+    console.log('buy');
+  }
+  selButtons() {
+    this.wallet += 10;
+    console.log(this.wallet);
+    console.log('sel');
+  }
+  model(action: boolean) {
+    action ? this.buyButtons() : this.selButtons();
+  }
+  newsmodel(news: any) {
+    this.newInfo = news;
+    console.log(this.newInfo);
   }
 
   //   Highcharts: typeof Highcharts = Highcharts; // required

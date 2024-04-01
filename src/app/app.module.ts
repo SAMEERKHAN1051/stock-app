@@ -26,7 +26,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { PortfolioComponent } from './pages/portfolio/portfolio.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HighchartsChartModule } from 'highcharts-angular';
 
 // import { HttpClientModule } from '@angular/common/http';
@@ -47,6 +47,7 @@ import { HighchartsChartModule } from 'highcharts-angular';
     // HttpClientModule,
   ],
   imports: [
+    ReactiveFormsModule,
     HighchartsChartModule,
     FormsModule,
     BrowserModule,

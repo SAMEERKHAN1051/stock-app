@@ -8,7 +8,7 @@ import { apiToken, environments } from 'src/environments/environment';
 })
 export class CustomHttpService {
   baseUrl = environments.baseUrl;
-  polyBaseUrl = environments.polyBaseUrl
+  polyBaseUrl = environments.polyBaseUrl;
 
   constructor(private http: HttpClient) {}
 
@@ -24,6 +24,17 @@ export class CustomHttpService {
     let token = apiToken.token;
     return this.http
       .get<T>(`${this.baseUrl}${url}&token=${token}`)
+      .pipe(catchError((error: HttpErrorResponse) => this.handleErrors(error)));
+  }
+  getApi<T>(url: string) {
+    return this.http
+      .get<T>(url)
+      .pipe(catchError((error: HttpErrorResponse) => this.handleErrors(error)));
+  }
+
+  postApi<T>(url: string, body: any) {
+    return this.http
+      .post<T>(url, body)
       .pipe(catchError((error: HttpErrorResponse) => this.handleErrors(error)));
   }
 

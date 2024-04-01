@@ -34,16 +34,12 @@
         <div class="btnsection">
           <button
             class="btn btn-success"
-            data-bs-toggle="modal"
-            data-bs-target="#exampleModal"
-            (click)="model()"
+            (click)="openModal(true, buySellModal)"
           >
             Buy</button
           ><button
             class="btn btn-danger mx-2"
-            data-bs-toggle="modal"
-            data-bs-target="#exampleModal"
-            (click)="model()"
+            (click)="openModal(false, buySellModal)"
           >
             Sell
           </button>
@@ -132,7 +128,7 @@
                     class="example-card"
                     data-bs-toggle="modal"
                     data-bs-target="#NewsModal"
-                    (click)="model()"
+                    (click)="newsmodel(news)"
                     style="cursor: pointer"
                   >
                     <mat-card-header>
@@ -152,16 +148,14 @@
     </mat-tab>
     <mat-tab label="Charts">
       <ng-template matTabContent>
-        <div class="container">
+        <div class="container-fluid">
           <div class="row">
-            <div class="col">
-              <highcharts-chart
-                [Highcharts]="Highcharts"
-                [constructorType]="'stockChart'"
-                [options]="chartOptions"
-              >
-              </highcharts-chart>
-            </div>
+            <highcharts-chart
+              [Highcharts]="Highcharts"
+              [constructorType]="'stockChart'"
+              [options]="chartOptions"
+            >
+            </highcharts-chart>
           </div>
         </div>
         <div style="text-align: center"></div>
@@ -225,75 +219,76 @@
       </ng-template>
     </mat-tab>
   </mat-tab-group>
-  <div
-    class="modal fade"
-    id="NewsModal"
-    tabindex="-1"
-    aria-labelledby="NewsModalLabel"
-    aria-hidden="true"
-  >
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="NewsModalLabel">Modal title</h1>
-          <p>datejfhdkjas</p>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-          ></button>
-        </div>
-        <div class="modal-body">
-          <h4>
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Facere
-            officia beatae doloribus minima consequatur, iste illo ipsam
-            obcaecati incidunt non, assumenda cum sequi eos voluptatibus
-            pariatur optio officiis minus repellendus.
-          </h4>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-            Blanditiis, dolore accusantium, earum dolorum dignissimos quia error
-            atque excepturi saepe, vitae vero. Cum vitae veritatis sint,
-            perspiciatis necessitatibus cupiditate dolor? Recusandae!
-          </p>
-          <span>For more details click <a href="#">here</a></span>
-        </div>
-        <div class="modal-footer"></div>
-      </div>
-    </div>
-  </div>
-  <div
-    class="modal fade"
-    id="exampleModal"
-    tabindex="-1"
-    aria-labelledby="exampleModalLabel"
-    aria-hidden="true"
-  >
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">
-            {{ stockDetail.ticker }}
-          </h1>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-          ></button>
-        </div>
-        <div class="modal-body">
-          <p>Current Price: 182.31</p>
-          <p>Money in Waleet: $182.31</p>
-          <label for="Quantity">Quantity: </label>
-          <input type="number" class="form-control" name="Quantity" id="" />
-        </div>
-        <div class="modal-footer">
-          <p>Total : 36462.0</p>
-          <button type="button" class="btn btn-primary">Buy</button>
+  <ng-container *ngIf="newInfo">
+    <div
+      class="modal fade"
+      id="NewsModal"
+      tabindex="-1"
+      aria-labelledby="NewsModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <div>
+              <h1 class="modal-title fs-5" id="NewsModalLabel">
+                {{ newInfo.source }}
+              </h1>
+              <p>{{ newInfo.datetime * 1000 | date : "medium" }}</p>
+            </div>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <h4>
+              {{ newInfo.headline }}
+            </h4>
+            <p>
+              {{ newInfo.summary }}
+            </p>
+            <span
+              >For more details click
+              <a href="{{ newInfo.url }} " target="_blank">here</a></span
+            >
+          </div>
+          <div class="modal-footer"></div>
         </div>
       </div>
     </div>
-  </div>
+  </ng-container>
+  <ng-template #buySellModal let-modal>
+    <div class="modal-header">
+      <h1 class="modal-title fs-5" id="exampleModalLabel">
+        {{ stockDetail.ticker }}
+      </h1>
+      <button
+        type="button"
+        class="btn-close"
+        (click)="modal.dismiss('Cross click')"
+        aria-label="Close"
+      ></button>
+    </div>
+    <div class="modal-body">
+      <p>Current Price: {{ quoteDetail.c }}</p>
+      <p>Money in Wallet: ${{ wallet.balance }}</p>
+      <label for="Quantity">Quantity: </label>
+      <input
+        type="number"
+        class="form-control"
+        [(ngModel)]="stockQuantity"
+        name="Quantity"
+        id=""
+      />
+    </div>
+    <div class="modal-footer">
+      <p>Total : {{ stockQuantity * quoteDetail.c }}</p>
+      <button type="button" (click)="buySellStock()" class="btn btn-primary">
+        {{ isToBuy ? "Buy" : "Sell" }}
+      </button>
+    </div>
+  </ng-template>
 </ng-container>

@@ -17,4 +17,7 @@ export class StockService {
   getStockSurprise(symbol: any): Observable<any> {
     return this.customHttp.get<any>(`stock/earnings?symbol=${symbol}`);
   }
+  getStockRecomondation(symbol: any): Observable<any> {
+    return this.customHttp.get<any>(`stock/recommendation?symbol=${symbol}`);
+  }
 }

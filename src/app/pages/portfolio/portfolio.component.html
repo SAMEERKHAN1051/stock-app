@@ -1,11 +1,10 @@
 <ng-container>
   <div class="container mt-5">
     <h2>My Portfolio</h2>
-    <h6>Money in Wallet: $19961.65</h6>
-    <div class="card">
+    <h6 *ngIf="wallet">Money in Wallet: ${{wallet.balance}}</h6>
+    <div *ngFor="let stock of portfolio" class="card" style="margin-top:20px">
       <div class="card-header d-flex">
-        <p>AAPL</p>
-        <p>Apple Inc</p>
+        <h3>{{stock.name}}</h3>
       </div>
       <div class="card-body">
         <table class="table table-striped" style="border-bottom: 1px solid">
@@ -21,20 +20,53 @@
           </thead>
           <tbody>
             <tr>
-              <td>5.00</td>
-              <td>184.37</td>
-              <td>921.85</td>
-              <td>0.00</td>
-              <td>184.37</td>
-              <td>921.85</td>
+              <td>{{stock.quantity}}</td>
+              <td>{{stock.avgCost}}</td>
+              <td>{{stock.totalCost}}</td>
+              <td>{{stock.change}}</td>
+              <td>{{stock.cruentValue}}</td>
+              <td>{{stock.marketValue}}</td>
             </tr>
           </tbody>
         </table>
       </div>
       <div class="card-footer text-body-secondary d-flex">
-        <button class="btn btn-primary">Buy</button>
-        <button class="btn btn-danger mx-2">Sell</button>
+        <button class="btn btn-primary" (click)="openModal(true, buySellModal, stock)">Buy</button>
+        <button class="btn btn-danger mx-2" (click)="openModal(false, buySellModal, stock._id)">Sell</button>
       </div>
     </div>
+  
   </div>
 </ng-container>
+
+<ng-template #buySellModal let-modal>
+  <div class="modal-header">
+    <h6 class="modal-title fs-5" id="exampleModalLabel">
+      {{ stockDetail.ticker }}
+    </h6>
+    <button
+      type="button"
+      class="btn-close"
+      (click)="modal.dismiss('Cross click')"
+      aria-label="Close"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <p>Current Price: {{ quoteDetail.c }}</p>
+    <p>Money in Wallet: ${{ wallet.balance }}</p>
+    <label for="Quantity">Quantity: </label>
+    <input
+      type="number"
+      class="form-control"
+      [(ngModel)]="stockQuantity"
+      name="Quantity"
+      id=""
+    />
+  </div>
+  <div class="modal-footer">
+    <p>Total : {{ stockQuantity * quoteDetail.c }}</p>
+    <button type="button" (click)="buySellStock()" class="btn btn-primary">
+      {{ isToBuy ? "Buy" : "Sell" }}
+    </button>
+  </div>
+</ng-template>
